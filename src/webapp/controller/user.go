@@ -16,6 +16,7 @@ type UserType struct {
 func (u UserType) RegisterRoute() {
 	http.HandleFunc("/record", u.RecordUserResponse)
 	http.HandleFunc("/show", u.ShowUserResponse)
+	http.HandleFunc("/show/", u.ShowUserTypeResponse)
 }
 
 func (u UserType) RecordUserResponse(w http.ResponseWriter, r *http.Request) {
@@ -76,4 +77,28 @@ func (u UserType) ShowUserResponse(w http.ResponseWriter, r *http.Request) {
 		json.NewEncoder(w).Encode(val)
 	}
 
+}
+
+func (u UserType) ShowUserTypeResponse(w http.ResponseWriter, r *http.Request) {
+	if r.Header.Get("Authorization") != os.Getenv("ADMIN_PASS") {
+		w.WriteHeader(http.StatusForbidden)
+		w.Write([]byte("Sorry, forbidden"))
+		return
+	}
+	param := r.URL.Path[6:]
+
+	switch param {
+	case "management", "technical", "design":
+		val, err := model.ShowTypeResponse(param)
+		if err != nil {
+			log.Println(err)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		json.NewEncoder(w).Encode(val)
+		return
+	default:
+		w.Write([]byte("Sorry, could not find what you're looking for"))
+		return
+	}
 }

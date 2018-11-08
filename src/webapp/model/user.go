@@ -77,3 +77,30 @@ func ShowByReg(reg string) (*User, error) {
 	return result, nil
 
 }
+
+func ShowTypeResponse(param string) ([]User, error) {
+	var arr []User
+	rows, err := db.Query(`
+	
+		SELECT NAME, EMAIL, REG, APPLICANTTYPE
+		FROM USER
+		WHERE APPLICANTTYPE=$1
+	`, param)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var result User
+		err = rows.Scan(&result.Name, &result.Email, &result.Reg, &result.ApplicantType)
+		switch {
+		case err == sql.ErrNoRows:
+			return nil, fmt.Errorf("No rows found")
+		case err != nil:
+			return nil, err
+		default:
+			arr = append(arr, result)
+			break
+		}
+	}
+	return arr, nil
+}
