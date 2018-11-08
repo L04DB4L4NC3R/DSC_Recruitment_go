@@ -10,3 +10,11 @@ type User struct {
 func RecordResponse(u *User) (*User, error) {
 	return u, nil
 }
+
+func ShowResponse() (*User, error) {
+	return nil, nil
+}
+
+func ShowByReg(reg string) (*User, error) {
+	return nil, nil
+}
