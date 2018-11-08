@@ -34,5 +34,16 @@ func ShowResponse() ([]User, error) {
 }
 
 func ShowByReg(reg string) (*User, error) {
-	return nil, nil
+	result := &User{}
+	row := db.QueryRow(`
+		SELECT NAME, EMAIL, REG, APPLICANTTYPE
+		FROM USER
+		WHERE REG=$1
+	`, reg)
+	err := row.Scan(&result.Name, &result.Email, &result.Reg, &result.ApplicantType)
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+
 }

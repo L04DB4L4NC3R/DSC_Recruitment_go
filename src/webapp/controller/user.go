@@ -40,19 +40,35 @@ func (u UserType) RecordUserResponse(w http.ResponseWriter, r *http.Request) {
 
 func (u UserType) ShowUserResponse(w http.ResponseWriter, r *http.Request) {
 	if r.Header.Get("Authorization") != os.Getenv("ADMIN_PASS") {
-		log.Println("HEYY")
 		w.WriteHeader(http.StatusForbidden)
 		w.Write([]byte("Sorry, forbidden"))
 		return
 	}
 
-	val, err := model.ShowResponse()
-	if err != nil {
-		log.Println(err)
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("Sorry, server error"))
-		return
+	if r.Method == http.MethodGet {
+		query := r.URL.Query()
+		reg := query.Get("reg")
+
+		if len(reg) > 0 {
+			val, err := model.ShowByReg(reg)
+			if err != nil {
+				log.Println(err)
+				w.WriteHeader(http.StatusInternalServerError)
+				w.Write([]byte(err.Error()))
+				return
+			}
+			json.NewEncoder(w).Encode(val)
+			return
+		}
+
+		val, err := model.ShowResponse()
+		if err != nil {
+			log.Println(err)
+			w.WriteHeader(http.StatusInternalServerError)
+			w.Write([]byte(err.Error()))
+			return
+		}
+		json.NewEncoder(w).Encode(val)
 	}
-	json.NewEncoder(w).Encode(val)
 
 }
