@@ -7,6 +7,7 @@ import (
 	"os"
 
 	"./controller"
+	"./model"
 	"github.com/joho/godotenv"
 	_ "github.com/mattn/go-sqlite3"
 )
@@ -30,6 +31,7 @@ func connectDB() *sql.DB {
 		return nil
 	} else {
 		log.Println("Connected to DB")
+		model.HandleDB(db)
 		return db
 	}
 }

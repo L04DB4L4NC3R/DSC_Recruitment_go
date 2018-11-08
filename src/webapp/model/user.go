@@ -11,8 +11,26 @@ func RecordResponse(u *User) (*User, error) {
 	return u, nil
 }
 
-func ShowResponse() (*User, error) {
-	return nil, nil
+func ShowResponse() ([]User, error) {
+	var arr []User
+	rows, err := db.Query(`
+		SELECT NAME, EMAIL, REG, APPLICANTTYPE
+		FROM USER
+	`)
+	if err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		var result User
+		err = rows.Scan(&result.Name, &result.Email, &result.Reg, &result.ApplicantType)
+		if err != nil {
+			return arr, err
+		} else {
+			arr = append(arr, result)
+		}
+	}
+	return arr, nil
+
 }
 
 func ShowByReg(reg string) (*User, error) {
