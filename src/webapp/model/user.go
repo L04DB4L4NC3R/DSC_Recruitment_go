@@ -1,5 +1,10 @@
 package model
 
+import (
+	"database/sql"
+	"fmt"
+)
+
 type User struct {
 	Name          string `json:name,omitempty`
 	Email         string `json:email,omitempty`
@@ -7,8 +12,33 @@ type User struct {
 	ApplicantType string `json:applicantType`
 }
 
-func RecordResponse(u *User) (*User, error) {
-	return u, nil
+func RecordResponse(u *User) error {
+
+	// check to see if record exists or not
+	var data string
+	row := db.QueryRow(`
+		SELECT NAME
+		FROM USER
+		WHERE REG=$1
+	`, u.Reg)
+	err := row.Scan(&data)
+
+	if err != nil && err != sql.ErrNoRows {
+		return err
+	}
+
+	if len(data) > 0 {
+		return fmt.Errorf("Already exists")
+	}
+	// if doesnt exist then proceed
+	_, err = db.Exec(`
+		INSERT INTO USER(NAME, EMAIL, REG, APPLICANTTYPE)
+		VALUES($1,$2,$3,$4)
+	`, u.Name, u.Email, u.Reg, u.ApplicantType)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func ShowResponse() ([]User, error) {

@@ -22,19 +22,24 @@ func (u UserType) RecordUserResponse(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		err := r.ParseForm()
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err)
+			w.Write([]byte(err.Error()))
+			return
 		}
 		f := r.Form
-		resp, err := model.RecordResponse(&model.User{
+		err = model.RecordResponse(&model.User{
 			Name:          f.Get("name"),
 			Email:         f.Get("email"),
 			Reg:           f.Get("reg"),
 			ApplicantType: f.Get("applicantType"),
 		})
 		if err != nil {
-			log.Fatalln(err)
+			log.Println(err.Error())
+			w.Write([]byte(err.Error()))
+			return
 		}
-		json.NewEncoder(w).Encode(resp)
+		w.Write([]byte("New entry added"))
+		return
 	}
 }
 
