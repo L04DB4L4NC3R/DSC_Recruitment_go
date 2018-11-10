@@ -21,19 +21,14 @@ func (u UserType) RegisterRoute() {
 
 func (u UserType) RecordUserResponse(w http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
-		err := r.ParseForm()
+		data := model.User{}
+		err := json.NewDecoder(r.Body).Decode(&data)
 		if err != nil {
 			log.Println(err)
 			w.Write([]byte(err.Error()))
 			return
 		}
-		f := r.Form
-		err = model.RecordResponse(&model.User{
-			Name:          f.Get("name"),
-			Email:         f.Get("email"),
-			Reg:           f.Get("reg"),
-			ApplicantType: f.Get("applicantType"),
-		})
+		err = model.RecordResponse(&data)
 		if err != nil {
 			log.Println(err.Error())
 			w.Write([]byte(err.Error()))
