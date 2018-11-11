@@ -38,10 +38,16 @@ Record and show recruitment details
 
 ```json
 {
-    "Reg":"16BCE0955",
-    "Q1":"answer",
-    "Q2":"answer",
-    "Q3":"answer",
-    "Q4":"answer"
+    "reg":"16BCE0955",
+    "q1":"answer",
+    "q2":"answer",
+    "q3":"answer",
+    "q4":"answer",
+    "q5":"answer",
+    "q6":"answer",
+    "q7":"answer",
+    "q8":"answer",
+    "q9":"answer",
+    "q10":"answer"
 }
 ```
