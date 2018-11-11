@@ -6,9 +6,10 @@ Record and show recruitment details
 | route |  type  |  data  |  response  |
 |---|---|---|---|
 | /record | POST | User object | New record added | 
-| /show | GET with Authorization header | ?reg=REGISTRATION_NUMBER (optional) | []User object |
+| /show | GET with Authorization header | ?reg={REGISTRATION_NUMBER} (optional) | []User object or User object |
 | /show/{applicantType} | GET with Authorization header |  applicantType="technical" etc.  |  []User object |
-| TODO /managementForm | POST | Management object | OK|
+| /manager/record | POST | Management object | OK|
+| /manager/show | GET | ?reg={REGISTRATION_NUMBER} (optional) | []Management object or Management object|
 
 
 <br />
