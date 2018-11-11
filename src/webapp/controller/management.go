@@ -4,7 +4,6 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"os"
 
 	"../model"
 )
@@ -39,11 +38,6 @@ func (m *ManagementType) ManagerRecord(w http.ResponseWriter, r *http.Request) {
 }
 
 func (m *ManagementType) ManagerShow(w http.ResponseWriter, r *http.Request) {
-	if r.Header.Get("Authorization") != os.Getenv("ADMIN_PASS") {
-		w.WriteHeader(http.StatusForbidden)
-		w.Write([]byte("Sorry, forbidden"))
-		return
-	}
 
 	data := &model.Management{}
 	query := r.URL.Query().Get("reg")

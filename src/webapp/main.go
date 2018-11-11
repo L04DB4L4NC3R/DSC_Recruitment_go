@@ -21,7 +21,7 @@ func main() {
 	db := connectDB()
 	defer db.Close()
 	controller.Startup()
-	http.ListenAndServe(":3000", nil)
+	log.Fatal(http.ListenAndServe(":3000", nil)
 }
 
 func connectDB() *sql.DB {
