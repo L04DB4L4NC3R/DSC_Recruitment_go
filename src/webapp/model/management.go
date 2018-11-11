@@ -1,5 +1,10 @@
 package model
 
+import (
+	"database/sql"
+	"fmt"
+)
+
 type Management struct {
 	Q1  string `json:q1`
 	Q2  string `json:q2`
@@ -25,14 +30,28 @@ func RecordManager(m *Management) error {
 	if err != nil {
 		return err
 	}
-	_, err = db.Query(`
-		INSERT INTO MANAGEMENT
+	row = db.QueryRow(`
+		SELECT REG
+		FROM MANAGEMENT
+		WHERE REG=$1
+	`, m.Reg)
+	err = row.Scan(&k)
+
+	if err == sql.ErrNoRows {
+		_, err = db.Exec(`
+		INSERT INTO MANAGEMENT(Q1, Q2, Q3, Q4, Q5, Q6, Q7, Q8, Q9, Q10, REG)
 		VALUES($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)
-	`, m.Q1, m.Q2, m.Q3, m.Q4, m.Q5, m.Q6, m.Q7, m.Q8, m.Q9, m.Q10, m.Reg)
-	if err != nil {
+		`, m.Q1, m.Q2, m.Q3, m.Q4, m.Q5, m.Q6, m.Q7, m.Q8, m.Q9, m.Q10, m.Reg)
+		if err != nil {
+			return err
+		}
+		return nil
+	} else if err != nil {
 		return err
+	} else {
+		return fmt.Errorf("User already responded")
 	}
-	return nil
+
 }
 
 func Showmanager(reg string) (*Management, error) {
@@ -43,6 +62,7 @@ func Showmanager(reg string) (*Management, error) {
 		WHERE REG=$1
 	`, reg)
 	err := row.Scan(&m.Q1, &m.Q2, &m.Q3, &m.Q4, &m.Q5, &m.Q6, &m.Q7, &m.Q8, &m.Q9, &m.Q10, &m.Reg)
+	fmt.Println(reg)
 	if err != nil {
 		return nil, err
 	}
