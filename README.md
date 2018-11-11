@@ -10,7 +10,7 @@ Record and show recruitment details
 | /show/{applicantType} | GET with Authorization header |  applicantType="technical" etc.  |  []User object |
 | /manager/record | POST | Management object | OK|
 | /manager/show | GET | ?reg={REGISTRATION_NUMBER} (optional) | []Management object or Management object|
-
+| /admin/login | POST | Admin object | token {string} | 
 
 <br />
 <br />
@@ -51,3 +51,18 @@ Record and show recruitment details
     "q10":"answer"
 }
 ```
+<br />
+<br />
+
+### Admin object
+
+<br />
+
+```json
+{
+    "username":"root",
+    "password":"toor"
+}
+```
+
+<br />

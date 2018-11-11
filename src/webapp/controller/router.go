@@ -19,7 +19,7 @@ type Admin struct {
 	Password string `json:password,omitempty`
 }
 
-func Startup() {
+func Startup() http.ServeMux {
 	u.RegisterRoute()
 	m.registerRoute()
 	http.HandleFunc("/admin/login", func(w http.ResponseWriter, r *http.Request) {
